@@ -1,24 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Task } from "@/app/types";
 
 interface TaskFormProps {
   onSubmit: (task: Task) => void;
+  taskToEdit?: Task;
+  members: { id: string; name: string }[]; 
 }
 
-const TaskForm = ({ onSubmit }: TaskFormProps) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [status, setStatus] = useState<"To Do" | "In Progress" | "Completed">("To Do"); // default status
+const TaskForm = ({ onSubmit, taskToEdit, members }: TaskFormProps) => {
+  const [title, setTitle] = useState(taskToEdit?.title || "");
+  const [description, setDescription] = useState(taskToEdit?.description || "");
+  const [status, setStatus] = useState<"To Do" | "In Progress" | "Completed">(taskToEdit?.status || "To Do");
+  const [assignTo, setAssignTo] = useState(taskToEdit?.assignTo || ""); 
 
+  useEffect(() => {
+    if (taskToEdit) {
+      setTitle(taskToEdit.title);
+      setDescription(taskToEdit.description);
+      setStatus(taskToEdit.status);
+      setAssignTo(taskToEdit.assignTo); 
+    }
+  }, [taskToEdit]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (title && description) {
-      onSubmit({ title, description, status });
+    if (title && description && assignTo) {
+      onSubmit({ title, description, status, assignTo });
       setTitle("");
       setDescription("");
+      setAssignTo("");
     }
   };
 
@@ -43,10 +55,7 @@ const TaskForm = ({ onSubmit }: TaskFormProps) => {
       </div>
 
       <div>
-        <label
-          htmlFor="description"
-          className="block text-lg font-medium text-gray-700"
-        >
+        <label htmlFor="description" className="block text-lg font-medium text-gray-700">
           Task Description
         </label>
         <textarea
@@ -60,6 +69,27 @@ const TaskForm = ({ onSubmit }: TaskFormProps) => {
       </div>
 
       <div>
+        <label htmlFor="assignTo" className="block text-lg font-medium text-gray-700">
+          Task Assign To
+        </label>
+        <select
+          id="assignTo"
+          value={assignTo}
+          onChange={(e) => setAssignTo(e.target.value)}
+          className="mt-2 w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          required
+        >
+          <option value="">Select Member</option>
+          {/* Render members dynamically */}
+          {members.map((member) => (
+            <option key={member.id} value={member.id}> {/* Store the member ID */}
+              {member.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
         <label htmlFor="status" className="block text-lg font-medium text-gray-700">
           Task Status
         </label>
@@ -67,10 +97,10 @@ const TaskForm = ({ onSubmit }: TaskFormProps) => {
           id="status"
           value={status}
           onChange={(e) => setStatus(e.target.value as "To Do" | "In Progress" | "Completed")}
-
           className="mt-2 w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         >
-          <option value="Pending">Pending</option>
+          <option value="To Do">To Do</option>
+          <option value="In Progress">In Progress</option>
           <option value="Completed">Completed</option>
         </select>
       </div>
@@ -79,7 +109,7 @@ const TaskForm = ({ onSubmit }: TaskFormProps) => {
         type="submit"
         className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg transition duration-300"
       >
-        Add Task
+        {taskToEdit ? "Update Task" : "Add Task"}
       </button>
     </form>
   );
