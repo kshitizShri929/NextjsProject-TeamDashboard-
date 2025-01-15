@@ -1,4 +1,4 @@
-// types/index.ts
+
 export interface TeamMember {
     id: string;
     name: string;

@@ -1,7 +1,7 @@
 
-import Header from './components/Header';  // Corrected import path
-import Footer from './components/Footer';
-import './globals.css'; // Make sure to import global styles (Tailwind)
+import Header from '@/app/components/Header';  
+import Footer from '@/app/components/Footer';
+import '@/app/globals.css';
 
 export const metadata = {
   title: 'Team Dashboard',
