@@ -83,3 +83,5 @@ const teamData = [
 export async function GET() {
   return NextResponse.json(teamData);
 }
+
+

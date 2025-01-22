@@ -34,13 +34,15 @@ const HomePage: React.FC = () => {
   });
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="flex items-center justify-center min-h-screen bg-gray-100">Loading...</div>;
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-4xl font-bold text-center text-gray-800 mb-6">Team Dashboard</h1>
-      <div className="my-4 flex items-center space-x-6 justify-center">
+    <div className="min-h-screen bg-gray-100 p-4 sm:p-8">
+      <h1 className="text-2xl sm:text-4xl font-bold text-center text-gray-800 mb-6">Team Dashboard</h1>
+      
+      {/* Search and Filter Container */}
+      <div className="my-4 flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6 justify-center">
         {/* Search bar */}
         <input
           type="text"
@@ -53,7 +55,7 @@ const HomePage: React.FC = () => {
         <select
           value={selectedRole}
           onChange={(e) => setSelectedRole(e.target.value)}
-          className="p-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="p-3 border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full sm:w-auto"
         >
           <option value="All">All Roles</option>
           <option value="Software Engineer">Software Engineer</option>
@@ -64,7 +66,8 @@ const HomePage: React.FC = () => {
         </select>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
+      {/* Team Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
         {filteredMembers.map((member) => (
           <TeamCard key={member.id} member={member} />
         ))}
@@ -74,4 +77,3 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
-
